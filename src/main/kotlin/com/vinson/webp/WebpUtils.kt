@@ -1,5 +1,8 @@
 package com.vinson.webp
 
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 
 /**
  * Created by Vinson on 2018/8/8.
@@ -16,8 +19,18 @@ object WebpUtils {
 
     private val webpBin = if (isWindow) WEBP_WINDOWS else WEBP_MAC
 
-    fun webpConvert(origin: String, dest: String, quality: Int, alpha: Int) {
+    fun webpConvert(origin: String, dest: String, quality: Int, alpha: Int): String {
         val args = arrayOf(webpBin, "-q", quality.toString(), "-alpha_q", alpha.toString(), origin, "-o", dest)
-        Runtime.getRuntime().exec(args)
+        val input = Runtime.getRuntime().exec(args).errorStream
+        val reader = BufferedReader(InputStreamReader(input))
+        return buildString {
+            do {
+                val line = reader.readLine()
+                line?.let {
+                    append(it)
+                    append('\n')
+                }
+            } while (line != null)
+        }
     }
 }
