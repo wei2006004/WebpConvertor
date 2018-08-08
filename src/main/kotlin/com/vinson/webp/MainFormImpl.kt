@@ -1,9 +1,6 @@
 package com.vinson.webp
 
-import java.awt.Toolkit
 import java.io.File
-import javax.swing.JFileChooser
-import javax.swing.JOptionPane
 import javax.swing.text.AttributeSet
 import javax.swing.text.PlainDocument
 import kotlin.concurrent.thread
@@ -37,24 +34,21 @@ class MainFormImpl(private val multi: Boolean) : MainForm() {
         return false
     }
 
-    private val fileChooser = JFileChooser()
-
     init {
-        fileChooser.fileSelectionMode = if (multi) JFileChooser.DIRECTORIES_ONLY else JFileChooser.FILES_ONLY
         if (!multi) {
             webpLabel.text = "webp文件"
             saveLabel.text = "保存文件"
         }
 
         webpButton.addActionListener {
-            chooseDir { success, file ->
+            chooseDirOrFile(multi, listOf("png", "jpg")) { success, file ->
                 if (success) {
                     webpText.text = file
                 }
             }
         }
         saveButton.addActionListener {
-            chooseDir { success, file ->
+            saveFileDialog(multi) { success, file ->
                 if (success) {
                     saveText.text = file
                 }
@@ -113,22 +107,6 @@ class MainFormImpl(private val multi: Boolean) : MainForm() {
                 }
             }
             startButton.isEnabled = true
-        }
-    }
-
-    private fun toast(message: String, title: String = "") {
-        Toolkit.getDefaultToolkit().beep()
-        JOptionPane.showMessageDialog(null, message, if (title.isEmpty()) "警告" else title, JOptionPane.INFORMATION_MESSAGE)
-    }
-
-    private fun chooseDir(done: (Boolean, String) -> Unit) {
-        fileChooser.showOpenDialog(null).let {
-            if (it != 1) {
-                val file = fileChooser.selectedFile
-                done(true, file.absolutePath)
-            } else {
-                done(false, "")
-            }
         }
     }
 }

@@ -6,7 +6,7 @@ import javax.swing.*;
  * Created by Vinson on 2018/8/8.
  * e-mail: wei2006004@foxmail.com
  */
-public class MainForm {
+public class MainForm extends BaseForm {
     public JPanel panel;
     public JButton webpButton;
     public JButton saveButton;
