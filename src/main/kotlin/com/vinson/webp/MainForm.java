@@ -13,6 +13,7 @@ public class MainForm {
     public JTextField webpText;
     public JTextField saveText;
     public JButton startButton;
-    public JTextPane msgText;
+    public JTextArea msgText;
+    public JTextField qualityText;
     public JTextField alphaText;
 }
