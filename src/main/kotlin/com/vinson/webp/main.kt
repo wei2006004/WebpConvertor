@@ -1,5 +1,6 @@
 package com.vinson.webp
 
+import java.awt.Toolkit
 import javax.swing.JFrame
 
 /**
@@ -8,12 +9,18 @@ import javax.swing.JFrame
  */
 
 fun main(args: Array<String>) {
+    val width = Toolkit.getDefaultToolkit().screenSize.width
+    val height = Toolkit.getDefaultToolkit().screenSize.height
+    val windowsWedth = 500
+    val windowsHeight = 400
+    
     val frame = JFrame("Webp调整")
     val form = MainFormImpl()
 
     frame.contentPane = form.panel
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 
-    frame.setSize(500, 400)
+    frame.setBounds((width - windowsWedth) / 2,
+            (height - windowsHeight) / 2, windowsWedth, windowsHeight);
     frame.isVisible = true
 }
