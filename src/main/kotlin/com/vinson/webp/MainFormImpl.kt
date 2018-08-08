@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
  * e-mail: wei2006004@foxmail.com
  */
 
-class MainFormImpl : MainForm() {
+class MainFormImpl(private val multi: Boolean) : MainForm() {
 
     class TextDocument: PlainDocument() {
         override fun insertString(offs: Int, str: String?, a: AttributeSet?) {
@@ -40,7 +40,12 @@ class MainFormImpl : MainForm() {
     private val fileChooser = JFileChooser()
 
     init {
-        fileChooser.fileSelectionMode = 1
+        fileChooser.fileSelectionMode = if (multi) JFileChooser.DIRECTORIES_ONLY else JFileChooser.FILES_ONLY
+        if (!multi) {
+            webpLabel.text = "webp文件"
+            saveLabel.text = "保存文件"
+        }
+
         webpButton.addActionListener {
             chooseDir { success, file ->
                 if (success) {
@@ -64,25 +69,38 @@ class MainFormImpl : MainForm() {
             val save = saveText.text
             val quality = qualityText.text.toInt()
             val alpha = alphaText.text.toInt()
-            if (quality !in (1..99) || alpha !in (1..99)) {
-                toast("quality和alpha必须在1-99之间")
+            if (quality !in (1..100) || alpha !in (1..100)) {
+                toast("quality和alpha必须在1-100之间")
                 return@addActionListener
             }
             if (orgin.isEmpty() || save.isEmpty()) {
-                toast("请选择文件夹")
+                toast(if (multi) "请选择文件夹" else "请选择webp文件")
                 return@addActionListener
             }
-            if (!File(orgin).exists() || !File(save).exists()) {
-                toast("文件夹不存在")
+            if (!File(orgin).exists()) {
+                toast(if (multi) "文件夹不存在" else "文件不存在")
                 return@addActionListener
             }
-            startConvert(orgin, save, quality, alpha)
+            if (multi) {
+                startConverts(orgin, save, quality, alpha)
+            } else {
+                startConvert(orgin, save, quality, alpha)
+            }
         }
     }
 
     private fun startConvert(orgin: String, save: String, quality: Int, alpha: Int) {
         startButton.isEnabled = false
         thread {
+            msgText.text = WebpUtils.webpConvert(orgin, save, quality, alpha)
+            startButton.isEnabled = true
+        }
+    }
+
+    private fun startConverts(orgin: String, save: String, quality: Int, alpha: Int) {
+        startButton.isEnabled = false
+        thread {
+            FileUtils.mkDir(save)
             buildString {
                 val dir = File(orgin)
                 dir.list().filter { isAcceptImage(it) }.forEach {
@@ -94,6 +112,7 @@ class MainFormImpl : MainForm() {
                     msgText.text = toString()
                 }
             }
+            startButton.isEnabled = true
         }
     }
 

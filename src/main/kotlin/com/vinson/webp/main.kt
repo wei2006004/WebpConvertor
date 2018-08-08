@@ -2,6 +2,7 @@ package com.vinson.webp
 
 import java.awt.Toolkit
 import javax.swing.JFrame
+import javax.swing.JTabbedPane
 
 /**
  * Created by Vinson on 2018/8/7.
@@ -15,9 +16,11 @@ fun main(args: Array<String>) {
     val windowsHeight = 400
     
     val frame = JFrame("Webp调整")
-    val form = MainFormImpl()
+    val tabs = JTabbedPane()
+    tabs.add("单个图片", MainFormImpl(false).panel)
+    tabs.add("多个图片", MainFormImpl(true).panel)
 
-    frame.contentPane = form.panel
+    frame.contentPane = tabs
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 
     frame.setBounds(

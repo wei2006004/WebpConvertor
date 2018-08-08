@@ -16,4 +16,6 @@ public class MainForm {
     public JTextArea msgText;
     public JTextField qualityText;
     public JTextField alphaText;
+    public JLabel webpLabel;
+    public JLabel saveLabel;
 }
