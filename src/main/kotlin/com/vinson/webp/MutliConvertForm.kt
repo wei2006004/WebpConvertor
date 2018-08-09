@@ -63,6 +63,7 @@ class MutliConvertForm : MainForm() {
                     val out = WebpUtils.webpConvert(from, to, quality, alpha)
                     append(out)
                     msgText.text = toString()
+                    msgText.caretPosition = msgText.document.length
                 }
             }
             startButton.isEnabled = true

@@ -58,6 +58,7 @@ class SingleConvertForm : MainForm() {
         startButton.isEnabled = false
         thread {
             msgText.text = WebpUtils.webpConvert(orgin, save, quality, alpha)
+            msgText.caretPosition = msgText.document.length
             startButton.isEnabled = true
         }
     }

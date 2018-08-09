@@ -21,4 +21,5 @@ public class MainForm extends BaseForm {
     public JPanel animPanel;
     public JTextField durationText;
     public JTextField loopText;
+    public JScrollPane msgPanel;
 }

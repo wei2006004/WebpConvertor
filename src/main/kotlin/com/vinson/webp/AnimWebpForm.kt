@@ -62,6 +62,7 @@ class AnimWebpForm  : MainForm() {
         thread {
             val list = File(orgin).listFiles().map { it.absolutePath }.filter { isImage(it) }
             msgText.text = WebpUtils.webpAnim(list, save, duration, loop, quality, alpha)
+            msgText.caretPosition = msgText.document.length
             startButton.isEnabled = true
         }
     }

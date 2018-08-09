@@ -34,6 +34,7 @@ class WebpInfoForm: InfoForm() {
         startBtn.isEnabled = false
         thread {
             msgText.text = WebpUtils.webpInfo(orgin)
+            msgText.caretPosition = msgText.document.length
             startBtn.isEnabled = true
         }
     }
