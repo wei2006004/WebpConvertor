@@ -11,28 +11,42 @@ import java.io.InputStreamReader
  */
 object WebpUtils {
 
-    const val WIN_CWEBP = "./bin/cwebp.exe"
-    const val MAC_CWEBP = "./bin/cwebp.exe"
+    enum class Platform(
+            dir: String,
+            cwebp: String,
+            webpinfo: String,
+            img2webp: String) {
+        WINDOWS("./bin/windows","cwebp.exe", "webpinfo.exe", "img2webp.exe"),
+        MAC("./bin/mac","cwebp", "webpinfo", "img2webp");
 
-    const val WIN_ANIM = "./bin/img2webp.exe"
-    const val MAC_ANIM = "./bin/img2webp.exe"
-
-    private val sysName = System.getProperties().getProperty("os.name")
-
-    private val isWindow = sysName.toUpperCase().contains("WINDOWS")
-
-    private val webpBin = if (isWindow) WIN_CWEBP else MAC_CWEBP
-    private val webpAnimBin = if (isWindow) WIN_ANIM else MAC_ANIM
-
-    fun webpConvert(origin: String, dest: String, quality: Int, alpha: Int): String {
-        val args = arrayOf(webpBin, "-q", quality.toString(), "-alpha_q", alpha.toString(), origin, "-o", dest)
-        val input = Runtime.getRuntime().exec(args).errorStream
-        return outputToString(input)
+        val cwebp = "$dir/$cwebp"
+        val webpinfo = "$dir/$webpinfo"
+        val img2webp = "$dir/$img2webp"
     }
 
+    private val sysName = System.getProperties().getProperty("os.name")
+    private val isWindow = sysName.toUpperCase().contains("WINDOWS")
+    private val currentPlatform get() = if (isWindow) Platform.WINDOWS else Platform.MAC
+
+    fun webpConvert(origin: String, dest: String, quality: Int, alpha: Int)
+            = execArgs(listOf(currentPlatform.cwebp, "-q", quality.toString(), "-alpha_q", alpha.toString(), origin, "-o", dest), true)
+
+    fun webpInfo(file: String)
+            = execArgs(listOf(currentPlatform.webpinfo, "-bitstream_info", file), false)
+
     fun webpAnim(list: List<String>, duration: Int, quality: Int, alpha: Int): String {
-        val args = listOf(webpAnimBin)
-        val input = Runtime.getRuntime().exec(args.toTypedArray()).errorStream
+        val args = listOf(currentPlatform.img2webp)
+        return execArgs(args, true)
+    }
+
+    private fun execArgs(args: List<String>, errorOuput: Boolean = false): String {
+        val input = Runtime.getRuntime().exec(args.toTypedArray()).let {
+            if (errorOuput) {
+                it.errorStream
+            } else {
+                it.inputStream
+            }
+        }
         return outputToString(input)
     }
 

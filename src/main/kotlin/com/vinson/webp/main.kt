@@ -19,6 +19,7 @@ fun main(args: Array<String>) {
     val tabs = JTabbedPane()
     tabs.add("单个图片", SingleConvertForm().panel)
     tabs.add("多个图片", MutliConvertForm().panel)
+    tabs.add("webp信息", WebpInfoForm().panel)
 
     frame.contentPane = tabs
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
