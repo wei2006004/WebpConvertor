@@ -1,54 +1,24 @@
 package com.vinson.webp
 
 import java.io.File
-import javax.swing.text.AttributeSet
-import javax.swing.text.PlainDocument
 import kotlin.concurrent.thread
 
 /**
- * Created by Vinson on 2018/8/8.
+ * Created by Vinson on 2018/8/9.
  * e-mail: wei2006004@foxmail.com
  */
-
-class MainFormImpl(private val multi: Boolean) : MainForm() {
-
-    class TextDocument: PlainDocument() {
-        override fun insertString(offs: Int, str: String?, a: AttributeSet?) {
-            if (str == null) return
-            try {
-                str.toInt()
-                super.insertString(offs, str, a)
-            } catch (e: Exception) {
-            }
-        }
-    }
-
-    private val suffixs = arrayOf(".png", ".jpg", ".jpeg", ".JPG", ".JPEG", ".PNG")
-
-    private fun isAcceptImage(file: String): Boolean {
-        suffixs.forEach {
-            if (file.contains(it)) {
-                return true
-            }
-        }
-        return false
-    }
+class MutliConvertForm : MainForm() {
 
     init {
-        if (!multi) {
-            webpLabel.text = "webp文件"
-            saveLabel.text = "保存文件"
-        }
-
         webpButton.addActionListener {
-            chooseDirOrFile(multi, listOf("png", "jpg")) { success, file ->
+            chooseDirOrFile(true) { success, file ->
                 if (success) {
                     webpText.text = file
                 }
             }
         }
         saveButton.addActionListener {
-            saveFileDialog(multi) { success, file ->
+            saveFileDialog(true) { success, file ->
                 if (success) {
                     saveText.text = file
                 }
@@ -68,26 +38,14 @@ class MainFormImpl(private val multi: Boolean) : MainForm() {
                 return@addActionListener
             }
             if (orgin.isEmpty() || save.isEmpty()) {
-                toast(if (multi) "请选择文件夹" else "请选择webp文件")
+                toast("请选择文件夹")
                 return@addActionListener
             }
             if (!File(orgin).exists()) {
-                toast(if (multi) "文件夹不存在" else "文件不存在")
+                toast("文件夹不存在")
                 return@addActionListener
             }
-            if (multi) {
-                startConverts(orgin, save, quality, alpha)
-            } else {
-                startConvert(orgin, save, quality, alpha)
-            }
-        }
-    }
-
-    private fun startConvert(orgin: String, save: String, quality: Int, alpha: Int) {
-        startButton.isEnabled = false
-        thread {
-            msgText.text = WebpUtils.webpConvert(orgin, save, quality, alpha)
-            startButton.isEnabled = true
+            startConverts(orgin, save, quality, alpha)
         }
     }
 
@@ -97,7 +55,7 @@ class MainFormImpl(private val multi: Boolean) : MainForm() {
             FileUtils.mkDir(save)
             buildString {
                 val dir = File(orgin)
-                dir.list().filter { isAcceptImage(it) }.forEach {
+                dir.list().filter { isImage(it) }.forEach {
                     val name = it.substring(0, it.lastIndexOf('.'))
                     val from = File(orgin, it).absolutePath
                     val to = File(save, "$name.webp").absolutePath

@@ -5,6 +5,8 @@ import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileFilter
+import javax.swing.text.AttributeSet
+import javax.swing.text.PlainDocument
 
 /**
  * Created by Vinson on 2018/8/8.
@@ -12,23 +14,50 @@ import javax.swing.filechooser.FileFilter
  */
 open class BaseForm {
 
-    class SimpleFilter(private val surfix: String): FileFilter() {
+    companion object {
+        val SUFFIX_IMG = listOf(".png", ".jpg", ".jpeg", ".JPG", ".JPEG", ".PNG")
+        val SUFFIX_WEBP = listOf(".webp")
 
-        override fun accept(f: File): Boolean {
-            if (f.isDirectory) return true
-            return f.absolutePath.contains(surfix)
-        }
+        fun isImage(file: String) = isAcceptSuffix(SUFFIX_IMG, file)
 
-        override fun getDescription(): String {
-            return "*.$surfix"
+        fun isAcceptSuffix(suffixs: List<String>, file: String): Boolean {
+            suffixs.forEach {
+                if (file.contains(it)) {
+                    return true
+                }
+            }
+            return false
         }
     }
 
-    protected fun sufixToFilters(surfixs: List<String>) = surfixs.map { SimpleFilter(it) }
+    class TextDocument: PlainDocument() {
+        override fun insertString(offs: Int, str: String?, a: AttributeSet?) {
+            if (str == null) return
+            try {
+                str.toInt()
+                super.insertString(offs, str, a)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    class SimpleFilter(private val suffixs: List<String>) : FileFilter() {
+
+        override fun accept(f: File): Boolean {
+            if (f.isDirectory) return true
+            return isAcceptSuffix(suffixs, f.absolutePath)
+        }
+
+        override fun getDescription() = buildString {
+            suffixs.forEach {
+                append("*$it;")
+            }
+        }
+    }
 
     protected val fileChooser = JFileChooser()
 
-    protected fun chooseDirOrFile(isDir: Boolean, filters: List<String> = emptyList(), done: (Boolean, String) -> Unit) = chooseDirOrFileWithFilter(isDir, done, sufixToFilters(filters))
+    protected fun chooseDirOrFile(isDir: Boolean, filters: List<String> = emptyList(), done: (Boolean, String) -> Unit) = chooseDirOrFileWithFilter(isDir, done, listOf(SimpleFilter(filters)))
 
     protected fun chooseDirOrFileWithFilter(isDir: Boolean, done: (Boolean, String) -> Unit, filters: List<FileFilter>) {
         setFileChooser(isDir, filters)
@@ -56,7 +85,7 @@ open class BaseForm {
         }
     }
 
-    protected fun saveFileDialog(isDir: Boolean, filters: List<String> = emptyList(), done: (Boolean, String) -> Unit) = saveFileDialogWithFilter(isDir, done, sufixToFilters(filters))
+    protected fun saveFileDialog(isDir: Boolean, filters: List<String> = emptyList(), done: (Boolean, String) -> Unit) = saveFileDialogWithFilter(isDir, done, listOf(SimpleFilter(filters)))
 
     protected fun saveFileDialogWithFilter(isDir: Boolean, done: (Boolean, String) -> Unit, filters: List<FileFilter>) {
         setFileChooser(isDir, filters)

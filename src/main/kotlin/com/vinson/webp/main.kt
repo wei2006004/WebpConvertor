@@ -17,8 +17,8 @@ fun main(args: Array<String>) {
     
     val frame = JFrame("Webp调整")
     val tabs = JTabbedPane()
-    tabs.add("单个图片", MainFormImpl(false).panel)
-    tabs.add("多个图片", MainFormImpl(true).panel)
+    tabs.add("单个图片", SingleConvertForm().panel)
+    tabs.add("多个图片", MutliConvertForm().panel)
 
     frame.contentPane = tabs
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
