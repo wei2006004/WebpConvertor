@@ -17,8 +17,10 @@ open class BaseForm {
     companion object {
         val SUFFIX_IMG = listOf(".png", ".jpg", ".jpeg", ".JPG", ".JPEG", ".PNG")
         val SUFFIX_WEBP = listOf(".webp")
+        val SUFFIX_IMG_WITH_WEBP = SUFFIX_IMG.toMutableList().apply { add(".webp") }.toList()
 
-        fun isImage(file: String) = isAcceptSuffix(SUFFIX_IMG, file)
+        fun isPlainImage(file: String) = isAcceptSuffix(SUFFIX_IMG, file)
+        fun isImage(file: String) = isAcceptSuffix(SUFFIX_IMG_WITH_WEBP, file)
 
         fun isAcceptSuffix(suffixs: List<String>, file: String): Boolean {
             suffixs.forEach {

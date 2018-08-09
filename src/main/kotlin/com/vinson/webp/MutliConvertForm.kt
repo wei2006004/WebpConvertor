@@ -56,7 +56,7 @@ class MutliConvertForm : MainForm() {
             FileUtils.mkDir(save)
             buildString {
                 val dir = File(orgin)
-                dir.list().filter { isImage(it) }.forEach {
+                dir.list().filter { isPlainImage(it) }.forEach {
                     val name = it.substring(0, it.lastIndexOf('.'))
                     val from = File(orgin, it).absolutePath
                     val to = File(save, "$name.webp").absolutePath

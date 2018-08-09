@@ -34,8 +34,18 @@ object WebpUtils {
     fun webpInfo(file: String)
             = execArgs(listOf(currentPlatform.webpinfo, "-bitstream_info", file), false)
 
-    fun webpAnim(list: List<String>, duration: Int, quality: Int, alpha: Int): String {
-        val args = listOf(currentPlatform.img2webp)
+    fun webpAnim(list: List<String>, dest: String, duration: Int, loop: Int, quality: Int, alpha: Int): String {
+        val args = mutableListOf(currentPlatform.img2webp, "-loop", loop.toString())
+        list.forEach {
+            args.add(it)
+            args.add("-lossy")
+            args.add("-d")
+            args.add(duration.toString())
+            args.add("-q")
+            args.add(quality.toString())
+        }
+        args.add("-o")
+        args.add(dest)
         return execArgs(args, true)
     }
 
