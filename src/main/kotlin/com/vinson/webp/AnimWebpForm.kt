@@ -7,10 +7,11 @@ import kotlin.concurrent.thread
  * Created by Vinson on 2018/8/9.
  * e-mail: wei2006004@foxmail.com
  */
-class MutliConvertForm : MainForm() {
+class AnimWebpForm  : MainForm() {
 
     init {
-        animPanel.isVisible = false
+        saveLabel.text = "保存文件"
+
         webpButton.addActionListener {
             chooseDirOrFile(true) { success, file ->
                 if (success) {
@@ -19,7 +20,7 @@ class MutliConvertForm : MainForm() {
             }
         }
         saveButton.addActionListener {
-            saveFileDialog(true) { success, file ->
+            saveFileDialog(false, SUFFIX_WEBP) { success, file ->
                 if (success) {
                     saveText.text = file
                 }

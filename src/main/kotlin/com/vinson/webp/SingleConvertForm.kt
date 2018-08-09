@@ -10,6 +10,8 @@ import kotlin.concurrent.thread
 class SingleConvertForm : MainForm() {
 
     init {
+        animPanel.isVisible = false
+
         webpLabel.text = "webp文件"
         saveLabel.text = "保存文件"
 

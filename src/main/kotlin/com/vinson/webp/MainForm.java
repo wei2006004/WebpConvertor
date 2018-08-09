@@ -18,4 +18,7 @@ public class MainForm extends BaseForm {
     public JTextField alphaText;
     public JLabel webpLabel;
     public JLabel saveLabel;
+    public JPanel animPanel;
+    public JTextField durationText;
+    public JTextField loopText;
 }
