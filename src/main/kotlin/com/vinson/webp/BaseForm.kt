@@ -21,6 +21,7 @@ open class BaseForm {
 
         fun isPlainImage(file: String) = isAcceptSuffix(SUFFIX_IMG, file)
         fun isImage(file: String) = isAcceptSuffix(SUFFIX_IMG_WITH_WEBP, file)
+        fun isWebp(file: String) = file.contains(".webp")
 
         fun isAcceptSuffix(suffixs: List<String>, file: String): Boolean {
             suffixs.forEach {
