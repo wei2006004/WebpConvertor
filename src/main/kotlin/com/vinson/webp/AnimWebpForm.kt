@@ -60,7 +60,7 @@ class AnimWebpForm  : MainForm() {
     private fun startConvert(orgin: String, save: String, duration: Int, loop: Int, quality: Int, alpha: Int) {
         startButton.isEnabled = false
         thread {
-            val list = File(orgin).listFiles().map { it.absolutePath }.filter { isImage(it) }
+            val list = File(orgin).listFiles().map { it.absolutePath }.filter { isImage(it) }.sorted()
             buildString {
                 append("Handle file: ${list.size}\n")
                 val files = list.map {
