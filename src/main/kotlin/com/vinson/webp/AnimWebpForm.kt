@@ -68,10 +68,12 @@ class AnimWebpForm  : MainForm() {
                     msgText.text = toString()
                     msgText.caretPosition = msgText.document.length
                     if (isWebp(it)) {
+                        println("webp skip: $it")
                         File(it)
                     } else {
                         // 非webp时先转换为webp
                         val temp = File.createTempFile(System.currentTimeMillis().toString(), ".webp")
+                        println("create temp: ${temp.absolutePath}")
                         WebpUtils.webpConvert(it, temp.absolutePath, quality, alpha)
                         temp
                     }
@@ -79,8 +81,11 @@ class AnimWebpForm  : MainForm() {
                 msgText.text = toString()
                 msgText.caretPosition = msgText.document.length
 
-                WebpUtils.webpAnim(files.map { it.absolutePath }, save, duration, loop, quality, alpha)
-                append("Finish: $save")
+                val out = WebpUtils.webpAnim(files.map { it.absolutePath }, save, duration, loop, quality, alpha)
+                append(out)
+                if (File(save).exists()) {
+                    append("\nFinish: $save\n")
+                }
                 msgText.text = toString()
                 msgText.caretPosition = msgText.document.length
             }

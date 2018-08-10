@@ -61,7 +61,8 @@ class MutliConvertForm : MainForm() {
                     val from = File(orgin, it).absolutePath
                     val to = File(save, "$name.webp").absolutePath
                     append("Compress: $from\n")
-                    WebpUtils.webpConvert(from, to, quality, alpha)
+                    val out = WebpUtils.webpConvert(from, to, quality, alpha)
+                    println(out)
                     append("Finish: $to\n")
                     msgText.text = toString()
                     msgText.caretPosition = msgText.document.length
